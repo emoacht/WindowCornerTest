@@ -1,0 +1,54 @@
+﻿<Window x:Class="WindowCornerTest.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Title="Window Corner Test"
+		Height="260" Width="400"
+		ResizeMode="NoResize" SizeToContent="Height">
+	<StackPanel>
+		<StackPanel Margin="10">
+			<StackPanel>
+				<TextBlock Margin="0,0,0,4"
+						   Text="Corner Preference"/>
+
+				<RadioButton x:Name="DefaultButton" Content="Default"/>
+				<RadioButton x:Name="DoNotRoundButton" Content="DoNotRound"/>
+				<RadioButton x:Name="RoundButton" Content="Round"/>
+				<RadioButton x:Name="RoundSmallButton" Content="RoundSmall"/>
+			</StackPanel>
+
+			<CheckBox x:Name="WindowStyleCheckBox"
+					  Margin="0,8,0,2"
+					  Content="WindowStyle=None"/>
+
+			<!-- When AllowsTransparency is set to True, WindowStyle must be set to None.-->
+			<CheckBox x:Name="AllowsTransparencyCheckBox"
+					  Margin="0,2"
+					  Content="AllowsTransparency=True"
+					  IsEnabled="{Binding ElementName=WindowStyleCheckBox, Path=IsChecked, Mode=OneWay}">
+				<CheckBox.Style>
+					<Style TargetType="{x:Type CheckBox}">
+						<Style.Triggers>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="IsChecked" Value="False"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</CheckBox.Style>
+			</CheckBox>
+
+			<CheckBox x:Name="WindowChromeCheckBox"
+					  Margin="0,2"
+					  Content="Enable WindowChrome"/>
+			<CheckBox x:Name="BackgroundBlurCheckBox"
+					  Margin="0,2"
+					  Content="Enable Background Blur"/>
+		</StackPanel>
+
+		<Button Height="32" Margin="0,8,0,0"
+				BorderThickness="0"
+				Background="#66000000"
+				Foreground="White"
+				Content="Create Window"
+				Click="Create_Click"/>
+	</StackPanel>
+</Window>
