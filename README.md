@@ -17,4 +17,7 @@ To work with rounded corners introduced in Windows 11, check the official explan
 
 The underlying values of key constants, `DWMWA_WINDOW_CORNER_PREFERENCE` and `DWM_WINDOW_CORNER_PREFERENCE` enumeration, can be found in dwmapi.h included in Windows Insider Preview SDK.
 
+![Screenshot](Images/Screenshot.png)<br>
+(DPI: 175%)
+
 Unfortunately, the rounded corners have __noticeable jaggies__ (except those of standard title bar) and anti-aliasing is not applied at this moment. This ugly edge is really discouraging to use this feature in production.
