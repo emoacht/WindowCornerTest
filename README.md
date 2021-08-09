@@ -5,7 +5,7 @@ Rounded corners of window on Windows 11 applicable to WPF.
 ## Requirements
 
 - .NET 5.0
-- Windows 11 (10.0.22000.100)
+- Windows 11 (10.0.22000.x)
 
 ## Overview
 
@@ -17,7 +17,13 @@ To work with rounded corners introduced in Windows 11, check the official explan
 
 The underlying values of key constants, `DWMWA_WINDOW_CORNER_PREFERENCE` and `DWM_WINDOW_CORNER_PREFERENCE` enumeration, can be found in dwmapi.h included in Windows Insider Preview SDK.
 
-![Screenshot](Images/Screenshot.png)<br>
+When rounded corners are applied to a window, a gray outline is automatically added.
+
+On version 10.0.22000.__100__, anti-aliasing is not applied to the rounded corners and they show noticeable jaggies (except those of standard title bar).
+
+![Screenshot](Images/Screenshot_22000_100.png)<br>
 (DPI: 175%)
 
-Unfortunately, the rounded corners have __noticeable jaggies__ (except those of standard title bar) and anti-aliasing is not applied at this moment. This ugly edge is really discouraging to use this feature in production.
+On version 10.0.22000.__120__, anti-aliasing is applied and the jaggies are fixed.
+
+![Screenshot](Images/Screenshot_22000_120.png)
