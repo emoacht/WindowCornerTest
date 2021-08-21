@@ -33,7 +33,7 @@ namespace WindowCornerTest
 		{
 			base.OnSourceInitialized(e);
 
-			WindowHelper.SetWindowCorner(this, _preference);
+			WindowHelper.SetWindowCorners(this, _preference);
 
 			if (_enableBlur)
 			{

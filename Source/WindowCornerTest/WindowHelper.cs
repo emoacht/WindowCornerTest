@@ -106,14 +106,14 @@ namespace WindowCornerTest
 
 		#endregion
 
-		public static bool SetWindowCorner(Window window, CornerPreference preference)
+		public static bool SetWindowCorners(Window window, CornerPreference preference)
 		{
 			var windowHandle = new WindowInteropHelper(window).Handle;
 
-			return SetWindowCorner(windowHandle, preference);
+			return SetWindowCorners(windowHandle, preference);
 		}
 
-		public static bool SetWindowCorner(IntPtr windowHandle, CornerPreference preference)
+		public static bool SetWindowCorners(IntPtr windowHandle, CornerPreference preference)
 		{
 			var value = (uint)preference;
 
