@@ -104,6 +104,53 @@ namespace WindowCornerTest
 			ACCENT_INVALID_STATE = 5
 		}
 
+		[DllImport("User32.dll", SetLastError = true)]
+		private static extern IntPtr FindWindowEx(
+			IntPtr hwndParent,
+			IntPtr hwndChildAfter,
+			string lpszClass,
+			string lpszWindow);
+
+		[DllImport("User32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool EnumWindows(
+			EnumWindowsProc lpEnumFunc,
+			IntPtr lParam);
+
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private delegate bool EnumWindowsProc(
+			IntPtr hWnd,
+			IntPtr lParam);
+
+		[DllImport("User32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool GetCursorPos(out POINT lpPoint);
+
+		[DllImport("User32.dll")]
+		private static extern IntPtr WindowFromPoint(POINT Point);
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct POINT
+		{
+			public int x;
+			public int y;
+
+			public static implicit operator Point(POINT point) => new Point(point.x, point.y);
+			public static implicit operator POINT(Point point) => new POINT { x = (int)point.X, y = (int)point.Y };
+		}
+
+		[DllImport("User32.dll")]
+		private static extern IntPtr GetDesktopWindow();
+
+		[DllImport("User32.dll")]
+		private static extern IntPtr GetParent(IntPtr hWnd);
+
+		[DllImport("User32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern int GetClassName(
+			IntPtr hWnd,
+			StringBuilder lpClassName,
+			int nMaxCount);
+
 		#endregion
 
 		public static bool SetWindowCorners(Window window, CornerPreference preference)
@@ -157,6 +204,63 @@ namespace WindowCornerTest
 			{
 				Marshal.FreeHGlobal(accentPointer);
 			}
+		}
+
+		public static IntPtr[] GetWindows()
+		{
+			var list = new List<IntPtr>();
+
+			if (EnumWindows(
+				Proc,
+				IntPtr.Zero))
+			{
+				return list.ToArray();
+			}
+			return Array.Empty<IntPtr>();
+
+			bool Proc(IntPtr windowHandle, IntPtr lParam)
+			{
+				if (windowHandle != IntPtr.Zero)
+					list.Add(windowHandle);
+
+				return true;
+			}
+		}
+
+		public static IEnumerable<IntPtr> EnumerateWindowsUnderCursor()
+		{
+			if (!GetCursorPos(out POINT point))
+				yield break;
+
+			var windowHandle = WindowFromPoint(point);
+			var desktopHandle = GetDesktopWindow();
+
+			while (windowHandle != IntPtr.Zero)
+			{
+				yield return windowHandle;
+
+				if (windowHandle == desktopHandle)
+					yield break;
+
+				windowHandle = GetParent(windowHandle);
+			}
+		}
+
+		public static string GetWindowClassName(IntPtr windowHandle)
+		{
+			if (windowHandle != IntPtr.Zero)
+			{
+				var buffer = new StringBuilder(256);
+
+				if (GetClassName(
+					windowHandle,
+					buffer,
+					buffer.Capacity) > 0)
+				{
+					return buffer.ToString();
+				}
+			}
+			return null;
 		}
 	}
 
