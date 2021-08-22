@@ -145,6 +145,34 @@ namespace WindowCornerTest
 		[DllImport("User32.dll")]
 		private static extern IntPtr GetParent(IntPtr hWnd);
 
+		[DllImport("User32.dll")]
+		private static extern IntPtr GetAncestor(
+			IntPtr hwnd,
+			GA gaFlags);
+
+		private enum GA : uint
+		{
+			GA_PARENT = 1,
+			GA_ROOT = 2,
+			GA_ROOTOWNER = 3
+		}
+
+		[DllImport("User32.dll")]
+		private static extern IntPtr GetWindow(
+			IntPtr hWnd,
+			GW uCmd);
+
+		private enum GW : uint
+		{
+			GW_CHILD = 5,
+			GW_ENABLEDPOPUP = 6,
+			GW_HWNDFIRST = 0,
+			GW_HWNDLAST = 1,
+			GW_HWNDNEXT = 2,
+			GW_HWNDPREV = 3,
+			GW_OWNER = 4
+		}
+
 		[DllImport("User32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		private static extern int GetClassName(
 			IntPtr hWnd,
@@ -242,7 +270,7 @@ namespace WindowCornerTest
 				if (windowHandle == desktopHandle)
 					yield break;
 
-				windowHandle = GetParent(windowHandle);
+				windowHandle = GetParentOrOwner(windowHandle);
 			}
 		}
 
@@ -261,6 +289,20 @@ namespace WindowCornerTest
 				}
 			}
 			return null;
+		}
+
+		public static IntPtr GetParentOrOwner(IntPtr windowHandle)
+		{
+			var handle = GetParent(windowHandle);
+			if (handle == IntPtr.Zero)
+			{
+				handle = GetAncestor(windowHandle, GA.GA_PARENT);
+				if (handle == IntPtr.Zero)
+				{
+					handle = GetWindow(windowHandle, GW.GW_OWNER);
+				}
+			}
+			return handle;
 		}
 	}
 
