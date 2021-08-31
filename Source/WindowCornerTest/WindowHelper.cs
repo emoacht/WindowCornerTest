@@ -183,7 +183,7 @@ namespace WindowCornerTest
 
 		public static bool SetWindowCorners(Window window, CornerPreference preference)
 		{
-			var windowHandle = new WindowInteropHelper(window).Handle;
+			var windowHandle = new WindowInteropHelper(window).EnsureHandle();
 
 			return SetWindowCorners(windowHandle, preference);
 		}
@@ -201,7 +201,7 @@ namespace WindowCornerTest
 
 		public static bool EnableBackgroundBlur(Window window)
 		{
-			var windowHandle = new WindowInteropHelper(window).Handle;
+			var windowHandle = new WindowInteropHelper(window).EnsureHandle();
 
 			return EnableBackgroundBlur(windowHandle);
 		}
